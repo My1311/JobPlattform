@@ -16,17 +16,23 @@ import de.hbrs.se2.views.routes.about.AboutView;
 import de.hbrs.se2.views.routes.home.HomeView;
 import de.hbrs.se2.views.routes.jobfeed.JobFeedView;
 import de.hbrs.se2.views.routes.profile.EditStudentProfile;
+import jakarta.annotation.PostConstruct;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.lineawesome.LineAwesomeIcon;
-
+import de.hbrs.se2.control.security.SecurityService;
+import com.vaadin.flow.component.button.Button;
 /**
  * The main view is a top-level placeholder for other views.
  */
 @PageTitle("Main")
 public class MainLayout extends AppLayout {
-
     private H2 viewTitle;
 
-    public MainLayout() {
+    @Autowired
+    private final SecurityService securityService;
+    @PostConstruct
+    public void init() {
         setPrimarySection(Section.DRAWER);
         addDrawerContent();
         addHeaderContent();
@@ -38,6 +44,12 @@ public class MainLayout extends AppLayout {
 
         viewTitle = new H2();
         viewTitle.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
+        //Logout
+        String u = securityService.getAuthenticatedUser().getUsername();
+        Button logout = new Button("Log out " + u, e -> securityService.logout());
+
+
+
 
         addToNavbar(true, toggle, viewTitle);
     }

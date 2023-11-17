@@ -21,10 +21,10 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import de.hbrs.se2.control.LoginService;
 import de.hbrs.se2.control.location.LocationService;
 import de.hbrs.se2.control.skill.SkillService;
 import de.hbrs.se2.control.student.StudentService;
+import de.hbrs.se2.control.user.UserService;
 import de.hbrs.se2.model.location.Location;
 import de.hbrs.se2.model.skill.Skill;
 import de.hbrs.se2.model.student.Student;
@@ -41,7 +41,6 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @PageTitle("Profile")
@@ -73,7 +72,7 @@ public class EditStudentProfile extends FormLayout {
 
     private final LocationService locationService;
 
-    private final LoginService userService;
+    private final UserService userService;
 
     private final SkillService skillService;
 
@@ -229,7 +228,7 @@ public class EditStudentProfile extends FormLayout {
                 .status(this.status.getValue())
                 .user(this.currentUser).build();
 
-        this.userService.addUser(this.currentUser);
+        this.userService.save(this.currentUser);
         this.locationService.addLocation(location);
         this.studentService.addStudent(student);
 
