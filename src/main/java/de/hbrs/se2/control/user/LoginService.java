@@ -1,15 +1,16 @@
 package de.hbrs.se2.control.user;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.router.RouteConfiguration;
+import de.hbrs.se2.model.common.BaseEntity;
+import de.hbrs.se2.model.student.Student;
 import de.hbrs.se2.model.user.User;
 import de.hbrs.se2.model.user.UserRepository;
 import de.hbrs.se2.util.Encryption;
 import de.hbrs.se2.util.SessionAttributes;
-import de.hbrs.se2.views.routes.about.AboutView;
-import de.hbrs.se2.views.routes.home.HomeView;
-import de.hbrs.se2.views.routes.jobfeed.JobFeedView;
-import de.hbrs.se2.views.routes.login.LoginView;
+import de.hbrs.se2.views.routes.profile.CompanyProfile;
+import de.hbrs.se2.views.routes.profile.EditStudentProfile;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,6 +41,14 @@ public class LoginService{
     }
     public void logout() {
         SessionAttributes.setCurrentUser(null);
+    }
+
+    public void navigate(BaseEntity identity) {
+        if (identity instanceof Student) {
+            UI.getCurrent().navigate(EditStudentProfile.class);
+        } else {
+            UI.getCurrent().navigate(CompanyProfile.class);
+        }
     }
 
 

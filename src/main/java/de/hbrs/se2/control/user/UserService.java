@@ -1,5 +1,7 @@
 package de.hbrs.se2.control.user;
 
+import de.hbrs.se2.control.company.CompanyService;
+import de.hbrs.se2.control.student.StudentService;
 import de.hbrs.se2.model.common.BaseEntity;
 import de.hbrs.se2.model.company.Company;
 import de.hbrs.se2.model.student.Student;
@@ -17,6 +19,9 @@ import java.util.NoSuchElementException;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+    private CompanyService companyService;
+    private StudentService studentService;
+
     public @Nullable User addUser(User user) {return userRepository.save(user);}
 
     public @Nullable User findUserByEmail(@NotNull String email) {
@@ -34,14 +39,14 @@ public class UserService {
     public BaseEntity identifyRole(User user) {
         Company company;
         try {
-            company = companyService.getCompanyByEmail(user.getEmail().toLowerCase());
+            company = companyService.findCompanyByUser(user);
         } catch (NoSuchElementException e) {
             company = null;
         }
 
         Student student;
         try {
-            student = studentService.getStudentByEmail(user.getEmail().toLowerCase());
+            student = studentService.findStudentByUser(user);
         } catch (NoSuchElementException e) {
             student = null;
         }

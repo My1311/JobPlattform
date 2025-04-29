@@ -35,11 +35,11 @@ import java.util.NoSuchElementException;
 
 @PageTitle("Login")
 @Route(value = Constant.Value.Route.LOGIN)
-public class Login extends VerticalLayout {
+public class LoginView extends VerticalLayout {
 
     static RouteConfiguration configuration = RouteConfiguration.forSessionScope();
-    private final LoginService loginService;
-    private final UserService userService;
+    private LoginService loginService;
+    private UserService userService;
     private final VerticalLayout loginLayout = new VerticalLayout();
     private final HorizontalLayout sideBySide = new HorizontalLayout();
     VerticalLayout loginView;
@@ -55,7 +55,7 @@ public class Login extends VerticalLayout {
     private Button submitLogin;
     private Button submitSecurity;
 
-    public Login(LoginService loginService, UserService userService) {
+    public LoginView(LoginService loginService, UserService userService) {
         getStyle().set("padding","0");
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
@@ -145,35 +145,36 @@ public class Login extends VerticalLayout {
         submitLogin.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
 
-        emailField.addValueChangeListener(event -> updateUILogin());
-        passwordField.addValueChangeListener(event -> updateUILogin());
-
-        securityQuestions.addValueChangeListener(event -> updateUISecurity());
-        answer.addValueChangeListener(event -> updateUISecurity());
+//        emailField.addValueChangeListener(event -> updateUILogin());
+//        passwordField.addValueChangeListener(event -> updateUILogin());
+//
+//        securityQuestions.addValueChangeListener(event -> updateUISecurity());
+//        answer.addValueChangeListener(event -> updateUISecurity());
 //        forgotPassword.addClickListener(event -> showSecurityQuestion());
 
         submitLogin.addClickListener(event -> {
             if (loginService.authenticate(emailField.getValue(),passwordField.getValue())) {
                 User currentUser = userService.findUserByEmail(emailField.getValue());
                 assert currentUser != null;
-                if (currentUser.getRoles().equals("Student")) {
-                    UI.getCurrent().navigate(EditStudentProfile.class);
-                } else if (currentUser.getRoles().equals("Company")) {
-                    UI.getCurrent().navigate(CompanyProfile.class);
+                try {
+                    if (currentUser.getRoles().equals("Student")) {
+                        UI.getCurrent().navigate(EditStudentProfile.class);
+                    } else if (currentUser.getRoles().equals("Company")) {
+                        UI.getCurrent().navigate(CompanyProfile.class);
+                    }
+                } catch (NoSuchElementException e) {
+                    BaseEntity identity = userService.identifyRole(loginService.getCurrentUser());
+                    loginService.navigate(identity);
                 }
-            } catch (NoSuchElementException e) {
-                BaseEntity identity = userService.identifyRole(loginService.getUser());
-                loginService.navigate(identity);
             }
-        }
         });
 
-        submitSecurity.addClickListener(event -> {
-            if (loginService.getUserByEmail(emailField.getValue()) && loginService.checkSecurityAnswer(answer.getValue())) {
-                BaseEntity identity = userService.identifyRole(loginService.getUser());
-                loginService.navigate(identity);
-            }
-        });
+//        submitSecurity.addClickListener(event -> {
+//            if (loginService.getUserByEmail(emailField.getValue()) && loginService.checkSecurityAnswer(answer.getValue())) {
+//                BaseEntity identity = userService.identifyRole(loginService.getUser());
+//                loginService.navigate(identity);
+//            }
+//        });
 
         sideBySide.setVisible(false);
         sideBySide.add(backToLogin, submitSecurity);
@@ -201,23 +202,23 @@ public class Login extends VerticalLayout {
         return loginLayout;
     }
 
-    private void updateUILogin() {
-        if (loginService.validateFieldsLogin(emailField.getValue(), passwordField.getValue())) { //Todo boolean für button entfernen und so abfragen
-            submitLogin.setEnabled(true);
-            submitLogin.getStyle().set("color", "white");
-        }
-    }
-
-    private void updateUISecurity() {
-        if (emailField.getValue().isEmpty()) {
-            Notification.show("please enter your email first");
-            return;
-        }
-        if (loginService.validateFieldsSecurity(securityQuestions.getValue(), answer.getValue())) {
-            submitSecurity.setEnabled(true);
-            submitSecurity.getStyle().set("color", "white");
-        }
-    }
+//    private void updateUILogin() {
+//        if (loginService.validateFieldsLogin(emailField.getValue(), passwordField.getValue())) { //Todo boolean für button entfernen und so abfragen
+//            submitLogin.setEnabled(true);
+//            submitLogin.getStyle().set("color", "white");
+//        }
+//    }
+//
+//    private void updateUISecurity() {
+//        if (emailField.getValue().isEmpty()) {
+//            Notification.show("please enter your email first");
+//            return;
+//        }
+//        if (loginService.validateFieldsSecurity(securityQuestions.getValue(), answer.getValue())) {
+//            submitSecurity.setEnabled(true);
+//            submitSecurity.getStyle().set("color", "white");
+//        }
+//    }
 
     private void showSecurityQuestion() {
         loginTitle.setVisible(false);
