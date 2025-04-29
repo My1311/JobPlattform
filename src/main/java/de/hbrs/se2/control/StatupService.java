@@ -35,7 +35,10 @@ public class StatupService {
 
 
     private void insertUser(){
-        userService.addUser(User.builder().email("test@test.com").password(Encryption.sha256("test")).build());
+        userService.addUser(User.builder().email("test@test.com")
+                .password(Encryption.sha256("test"))
+                .roles("Student")
+                .build());
     }
     private void insertSkills() {
         skillService.addSkill(Skill.builder().name(Constant.Value.Skill.CPP).build());

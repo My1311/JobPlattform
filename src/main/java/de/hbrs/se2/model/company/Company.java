@@ -2,12 +2,11 @@ package de.hbrs.se2.model.company;
 
 import de.hbrs.se2.model.common.BaseEntity;
 import de.hbrs.se2.model.jobAdvertisement.Advertisement;
-import de.hbrs.se2.model.jobadvertisement.Advertisement;
+import de.hbrs.se2.model.jobAdvertisement.Advertisement;
 import de.hbrs.se2.model.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 

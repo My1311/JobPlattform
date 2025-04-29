@@ -22,7 +22,6 @@ import com.vaadin.flow.router.RouteConfiguration;
 import de.hbrs.se2.control.user.LoginService;
 import de.hbrs.se2.control.user.UserService;
 import de.hbrs.se2.model.common.BaseEntity;
-import de.hbrs.se2.model.user.Role;
 import de.hbrs.se2.model.user.User;
 import de.hbrs.se2.util.Constant;
 import de.hbrs.se2.views.component.HeaderLayout;
@@ -94,9 +93,6 @@ public class LoginView extends VerticalLayout {
         passwordField.setWidth("350px");
         passwordField.setValueChangeMode(ValueChangeMode.LAZY);
 
-        MultiSelectComboBox<Role> roleComboBox = new MultiSelectComboBox<>();
-        roleComboBox.setLabel("Rollen auswählen");
-        roleComboBox.setItems(Role.values());
 
         toRegister = new Anchor("/register", "No account? Click here!");
         toRegister.addClassName("login-a-1");

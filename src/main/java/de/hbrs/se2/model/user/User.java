@@ -26,17 +26,15 @@ public class User extends BaseEntity {
     @Column(name = "password", nullable = false)
     private String password = "";
 
-    @Enumerated(EnumType.STRING)
-    @ElementCollection(fetch = FetchType.EAGER)
     @NotNull
     @Builder.Default
     @Column(name = "role", nullable = false)
-    private Set<Role> roles;
+    private String roles;
 
 
     public User() {}
 
-    public User(String email, String password, Set<Role> role) {
+    public User(String email, String password, String role) {
         this.email = email;
         this.password = Encryption.sha256(password);
         this.roles = role;
