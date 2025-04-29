@@ -10,13 +10,14 @@ public final class Constant {
         public static final class Route{
             public static final String EDITPROFILE = "edit_profile";
 
-            public static final String HOME = "home";
+            public static final String HOME = "";
 
-            public static final String LOGIN = "";
+            public static final String LOGIN = "login";
 
             public static final String JOBFEED = "jobfeed";
 
             public static final String ABOUT = "about";
+            public static final String REGISTER = "register" ;
         }
         public static final class Skill {
             public static final String PYTHON = "Python";

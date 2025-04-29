@@ -1,7 +1,6 @@
 package de.hbrs.se2.views.routes.profile;
 
 import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -9,7 +8,6 @@ import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.notification.Notification;
@@ -21,10 +19,11 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import de.hbrs.se2.control.LoginService;
+import de.hbrs.se2.control.user.LoginService;
 import de.hbrs.se2.control.location.LocationService;
 import de.hbrs.se2.control.skill.SkillService;
 import de.hbrs.se2.control.student.StudentService;
+import de.hbrs.se2.control.user.UserService;
 import de.hbrs.se2.model.location.Location;
 import de.hbrs.se2.model.skill.Skill;
 import de.hbrs.se2.model.student.Student;
@@ -33,6 +32,7 @@ import de.hbrs.se2.util.Constant;
 import de.hbrs.se2.util.SessionAttributes;
 import de.hbrs.se2.views.common.MainLayout;
 import jakarta.annotation.PostConstruct;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,12 +41,11 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @PageTitle("Profile")
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Route(value = Constant.Value.Route.EDITPROFILE, layout = MainLayout.class)
+@AllArgsConstructor
 public class EditStudentProfile extends FormLayout {
 
     private final DatePicker date_of_birth = new DatePicker("Date Of Birth");
@@ -68,13 +67,13 @@ public class EditStudentProfile extends FormLayout {
     private final Checkbox switchEditMode = new Checkbox("Edit Profile");
     private User currentUser;
 
-
+    @Autowired
+    private final UserService userService;
+    @Autowired
     private final StudentService studentService;
-
+    @Autowired
     private final LocationService locationService;
-
-    private final LoginService userService;
-
+    @Autowired
     private final SkillService skillService;
 
     @PostConstruct
@@ -83,11 +82,11 @@ public class EditStudentProfile extends FormLayout {
         /**
          * when there is not a logged-in user, then he/she has to go login
          */
-        if(this.currentUser == null) {
-            UI.getCurrent().navigate(Constant.Value.Route.LOGIN);
-            add(new Div(new H3("Please login before creating your Profile!")));
-            return;
-        }
+//        if(this.currentUser == null) {
+//            UI.getCurrent().navigate(Constant.Value.Route.LOGIN);
+//            add(new Div(new H3("Please login before creating your Profile!")));
+//            return;
+//        }
         VerticalLayout layoutColumn2 = new VerticalLayout();
         H3 h3 = new H3();
         FormLayout formLayout2Col = new FormLayout();

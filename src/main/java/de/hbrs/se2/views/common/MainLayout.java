@@ -2,20 +2,25 @@ package de.hbrs.se2.views.common;
 
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Footer;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Header;
+import com.vaadin.flow.component.login.LoginOverlay;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+
 import de.hbrs.se2.views.routes.about.AboutView;
 import de.hbrs.se2.views.routes.home.HomeView;
 import de.hbrs.se2.views.routes.jobfeed.JobFeedView;
+import de.hbrs.se2.views.routes.login.LoginView;
 import de.hbrs.se2.views.routes.profile.EditStudentProfile;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 /**
@@ -25,6 +30,7 @@ import org.vaadin.lineawesome.LineAwesomeIcon;
 public class MainLayout extends AppLayout {
 
     private H2 viewTitle;
+
 
     public MainLayout() {
         setPrimarySection(Section.DRAWER);
@@ -38,8 +44,12 @@ public class MainLayout extends AppLayout {
 
         viewTitle = new H2();
         viewTitle.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
+        LoginOverlay loginOverlay = new LoginOverlay();
+        Button login = new Button("Login");
+        login.addClickListener(e -> loginOverlay.setOpened(true));
+        //Button logout = new Button("Log out", e -> securityService.logout());
 
-        addToNavbar(true, toggle, viewTitle);
+        addToNavbar(true, toggle, viewTitle,login);
     }
 
     private void addDrawerContent() {

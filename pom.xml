@@ -52,6 +52,7 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-spring-boot-starter</artifactId>
+            <version>14.8.6</version>
         </dependency>
         <dependency>
             <groupId>org.parttio</groupId>
@@ -126,11 +127,13 @@
             <artifactId>bcprov-jdk15on</artifactId>
             <version>1.64</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security -->
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-crypto</artifactId>
-            <version>3.1.0.RELEASE</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+            <version>3.3.5</version>
         </dependency>
+
     </dependencies>
 
     <build>
@@ -187,6 +190,17 @@
                         </exclusion>
                     </exclusions>
                 </dependency>
+                <!-- https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api -->
+                <dependency>
+                    <groupId>jakarta.servlet</groupId>
+                    <artifactId>jakarta.servlet-api</artifactId>
+                    <version>6.1.0</version>
+                    <scope>provided</scope>
+                </dependency>
+
+
+
+
             </dependencies>
             <build>
                 <plugins>

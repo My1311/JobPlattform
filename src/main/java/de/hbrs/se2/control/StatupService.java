@@ -1,8 +1,11 @@
 package de.hbrs.se2.control;
 
 import de.hbrs.se2.control.skill.SkillService;
+import de.hbrs.se2.control.user.UserService;
 import de.hbrs.se2.model.skill.Skill;
+import de.hbrs.se2.model.user.User;
 import de.hbrs.se2.util.Constant;
+import de.hbrs.se2.util.Encryption;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,6 +18,8 @@ public class StatupService {
 
     @Autowired
     private SkillService skillService;
+    @Autowired
+    private UserService userService;
 
     @PostConstruct
     private void initSkillsIfNotFound() {
@@ -22,6 +27,15 @@ public class StatupService {
         if(skills.isEmpty()) {
             insertSkills();
         }
+        var users = this.userService.findAllUsers();
+        if(users.isEmpty()) {
+            insertUser();
+        }
+    }
+
+
+    private void insertUser(){
+        userService.addUser(User.builder().email("test@test.com").password(Encryption.sha256("test")).build());
     }
     private void insertSkills() {
         skillService.addSkill(Skill.builder().name(Constant.Value.Skill.CPP).build());
