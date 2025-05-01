@@ -19,6 +19,7 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteConfiguration;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import de.hbrs.se2.control.user.LoginService;
 import de.hbrs.se2.control.user.UserService;
 import de.hbrs.se2.model.common.BaseEntity;
@@ -32,6 +33,7 @@ import de.hbrs.se2.views.routes.profile.EditStudentProfile;
 import java.util.NoSuchElementException;
 
 
+@AnonymousAllowed
 @PageTitle("Login")
 @Route(value = Constant.Value.Route.LOGIN)
 public class LoginView extends VerticalLayout {

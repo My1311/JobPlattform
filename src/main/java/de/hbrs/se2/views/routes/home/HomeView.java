@@ -9,10 +9,12 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import de.hbrs.se2.util.Constant;
 import de.hbrs.se2.views.common.MainLayout;
 import de.hbrs.se2.views.routes.login.LoginView;
 
+@AnonymousAllowed
 @PageTitle("Home")
 @Route(value=Constant.Value.Route.HOME, layout = MainLayout.class)
 public class HomeView extends HorizontalLayout {

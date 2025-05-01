@@ -44,6 +44,7 @@ public class RegisterView extends Div {
                         roleSelect.getValue()
                 )));
     }
+
     private void register(String username, String password, String confirmPassword, String role){
 
         if(username.trim().isEmpty() || password.trim().isEmpty() || confirmPassword.trim().isEmpty() || role.trim().isEmpty()){

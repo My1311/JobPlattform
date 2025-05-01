@@ -13,6 +13,7 @@ import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import de.hbrs.se2.views.routes.about.AboutView;
@@ -26,6 +27,9 @@ import org.vaadin.lineawesome.LineAwesomeIcon;
 /**
  * The main view is a top-level placeholder for other views.
  */
+
+
+@AnonymousAllowed
 @PageTitle("Main")
 public class MainLayout extends AppLayout {
 
