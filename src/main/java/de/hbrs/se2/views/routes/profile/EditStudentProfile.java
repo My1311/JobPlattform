@@ -18,6 +18,7 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import de.hbrs.se2.control.user.LoginService;
 import de.hbrs.se2.control.location.LocationService;
@@ -46,6 +47,7 @@ import java.util.stream.Collectors;
 @PageTitle("Profile")
 @Route(value = Constant.Value.Route.EDITPROFILE, layout = MainLayout.class)
 @AllArgsConstructor
+@AnonymousAllowed
 public class EditStudentProfile extends FormLayout {
 
     private final DatePicker date_of_birth = new DatePicker("Date Of Birth");
@@ -65,7 +67,7 @@ public class EditStudentProfile extends FormLayout {
     private final Button saveButton = new Button("Save");
     private final Button cancelButton = new Button("Cancel");
     private final Checkbox switchEditMode = new Checkbox("Edit Profile");
-    private User currentUser;
+    private final User currentUser = SessionAttributes.getCurrentUser();;
 
     @Autowired
     private final UserService userService;
@@ -78,7 +80,6 @@ public class EditStudentProfile extends FormLayout {
 
     @PostConstruct
     private void initPage() {
-       this.currentUser = SessionAttributes.getCurrentUser();
         /**
          * when there is not a logged-in user, then he/she has to go login
          */

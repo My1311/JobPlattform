@@ -13,6 +13,7 @@ import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import de.hbrs.se2.model.Person;
 import de.hbrs.se2.util.Constant;
 import de.hbrs.se2.views.common.MainLayout;
@@ -20,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @PageTitle("JobFeed")
+@AnonymousAllowed
 @Route(value = Constant.Value.Route.JOBFEED, layout = MainLayout.class)
 public class JobFeedView extends Div implements AfterNavigationObserver {
 

@@ -10,13 +10,15 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import de.hbrs.se2.control.user.UserService;
 import de.hbrs.se2.model.user.User;
 import de.hbrs.se2.util.Constant;
+import de.hbrs.se2.util.Encryption;
 import jakarta.annotation.PostConstruct;
 
 import java.util.Set;
-
+@AnonymousAllowed
 @Route(value = Constant.Value.Route.REGISTER)
 public class RegisterView extends Div {
 
@@ -26,23 +28,25 @@ public class RegisterView extends Div {
         this.userService = userService;
     }
     @PostConstruct
-    protected Component initContent(){
-        TextField username = new TextField("Username");
+    protected void initContent(){
+        TextField email = new TextField("E-Mail");
         PasswordField password1 = new PasswordField("Password");
         PasswordField password2 = new PasswordField("Confirm Password");
         ComboBox<String> roleSelect = new ComboBox<>("Rolle");
         roleSelect.setItems("Student", "Company", "Admin");
 
-
-        return new VerticalLayout(
+        VerticalLayout layout = new VerticalLayout(
                 new H2("Register"),
-                username, password1, password2,roleSelect,
+                email, password1, password2,roleSelect,
                 new Button("Send", event -> register (
-                        username.getValue(),
+                        email.getValue(),
                         password1.getValue(),
                         password2.getValue(),
                         roleSelect.getValue()
                 )));
+        layout.setWidthFull();
+        setWidthFull();
+        add(layout);
     }
 
     private void register(String username, String password, String confirmPassword, String role){
@@ -52,7 +56,7 @@ public class RegisterView extends Div {
         } else if(!password.equals(confirmPassword)){
             Notification.show("Passwords do not match.");
         } else {
-            User newUser = new User(username, password, role);
+            User newUser = new User(username, Encryption.sha256(password), role);
             userService.addUser(newUser);
             Notification.show("User registered successfully.");
         }

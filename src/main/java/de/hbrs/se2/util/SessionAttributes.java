@@ -15,4 +15,8 @@ public class SessionAttributes {
     public static void setCurrentUser(User user) {
         UI.getCurrent().getSession().setAttribute(Constant.Value.CURRENT_USER, user);
     }
+
+    public static void reloadSite() {
+        UI.getCurrent().getPage().reload();
+    }
 }

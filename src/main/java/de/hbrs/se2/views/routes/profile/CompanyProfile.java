@@ -19,6 +19,7 @@ import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import de.hbrs.se2.control.user.LoginService;
 import de.hbrs.se2.control.user.UserService;
 import de.hbrs.se2.control.company.CompanyService;
@@ -38,6 +39,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+@AnonymousAllowed
 @Lazy
 @Route(value = Constant.Value.Route.EDITCOMPANYPROFILE/*,registerAtStartup = false*/)
 public class CompanyProfile extends VerticalLayout {

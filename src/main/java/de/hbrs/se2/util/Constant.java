@@ -19,6 +19,7 @@ public final class Constant {
             public static final String ABOUT = "about";
             public static final String REGISTER = "register" ;
             public static final String EDITCOMPANYPROFILE = "edit_company_profile";
+            public static final String FAQ = "faq";
         }
         public static final class Skill {
             public static final String PYTHON = "Python";
