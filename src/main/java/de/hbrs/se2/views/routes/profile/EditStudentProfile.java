@@ -286,20 +286,6 @@ public class EditStudentProfile extends FormLayout {
                 this.studentService.addStudent(this.currentStudent);
                 this.locationService.addLocation(location);
                 Notification.show("Student updated");
-            } else {
-//                Student student = Student.builder()
-//                        .degree(this.degree.getValue())
-//                        .first_name(this.first_name.getValue())
-//                        .last_name(this.last_name.getValue())
-//                        .major_study(this.major_study.getValue())
-//                      //  .list_of_skills(this.list_of_skills.getValue())
-//                        .user(this.currentUser).build();
-                Location location = this.writeLocation();
-                Student student = this.writeStudent(location);
-                this.userService.addUser(this.currentUser);
-                this.studentService.addStudent(student);
-                this.locationService.addLocation(location);
-                Notification.show("Student added");
             }
         }
 

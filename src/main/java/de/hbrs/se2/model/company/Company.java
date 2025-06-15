@@ -5,6 +5,8 @@ import de.hbrs.se2.model.advertisement.Advertisement;
 import de.hbrs.se2.model.user.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,19 +23,26 @@ public class Company extends BaseEntity {
     @Builder.Default
     @Column(nullable = false)
     private String name = "";
+
     @Builder.Default
-    @Basic(fetch = FetchType.EAGER) //will immediately be loaded
-    @Column(name = "logo", nullable = true)
+    @Lob
+    @Basic(fetch = FetchType.LAZY) //will immediately be loaded
+    @Column(name = "logo")
+    @JdbcTypeCode(SqlTypes.VARBINARY)
     private byte[] logo = null;
+
     @Builder.Default
     @Column(name = "industry", nullable = false)
     private String industry = "";
+
     @Builder.Default()
     @Column(nullable = false)
     private String description = "";
+
     @Builder.Default()
     @Column(name = "phoneNumber", nullable = true)
     private String phoneNumber = "";
+
     //@PrimaryKeyJoinColumn(name = "user")
     //so that Hibernate knows it is a single value that will be received. otherwise there would be an error for the attribute
     @Builder.Default
@@ -45,8 +54,10 @@ public class Company extends BaseEntity {
             foreignKey = @ForeignKey(name = "fk_from_company_to_user")// sets the name of the foreign key constraint in the db
     )
     private User user = null;
+
     @OneToMany(mappedBy = "company", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private List<Advertisement> advertisements = new ArrayList<Advertisement>();
+
     @Builder.Default()
     @Column(name = "rating_punkt", nullable = false)
     private double rating_punkt = 0.0;

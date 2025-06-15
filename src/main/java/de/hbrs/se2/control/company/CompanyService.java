@@ -7,6 +7,7 @@ import de.hbrs.se2.model.user.User;
 
 import org.jetbrains.annotations.Nullable;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,7 +15,10 @@ import java.util.List;
 
 @Service
 public class CompanyService {
+
+    @Autowired
     private CompanyRepository companyRepository;
+    @Autowired
     private ImageService imageService;
     public @Nullable Company addCompany(Company company) { // code von my aus StudentService in angepasster form
         return companyRepository.save(company);
@@ -28,5 +32,11 @@ public class CompanyService {
     public void deleteCompany(Company company) {
         this.companyRepository.delete(company);
     }
-
+    public byte[] getLogoByCompany(Company company) {
+        return this.companyRepository.getLogoByCompany(company.getId());
+    }
+    public void setLogoByCompany(Company company, byte[] logo) {
+        company.setLogo(logo);
+        this.companyRepository.save(company);
+    }
 }

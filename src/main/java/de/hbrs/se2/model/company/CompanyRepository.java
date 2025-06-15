@@ -19,4 +19,7 @@ public interface CompanyRepository extends JpaRepository<Company, UUID> {
     @Query("SELECT company FROM Company company WHERE company.user.id=:userId")
     @Nullable
     Company findCompanyByUser(@Param("userId") UUID userId);
+
+    @Query("SELECT company.logo FROM Company company WHERE company.id=:id")
+    byte[] getLogoByCompany(@Param("id") UUID id);
 }

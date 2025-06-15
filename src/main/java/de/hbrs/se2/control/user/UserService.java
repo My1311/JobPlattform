@@ -19,7 +19,9 @@ import java.util.NoSuchElementException;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
     private CompanyService companyService;
+    @Autowired
     private StudentService studentService;
 
     public @Nullable User addUser(User user) {return userRepository.save(user);}

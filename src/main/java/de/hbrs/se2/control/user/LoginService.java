@@ -28,6 +28,8 @@ public class LoginService{
     public boolean authenticate(@NotNull String email,@NotNull String password) throws IllegalArgumentException {
 
         final User user =  this.userService.findUserByEmail(email);
+        System.out.println(user.getPassword());
+        System.out.println(Encryption.sha256(password));
         if (user != null && user.getPassword().equals(Encryption.sha256(password))) {
             SessionAttributes.setCurrentUser(user);
           //  this.currentUser = user;

@@ -26,11 +26,11 @@ public class Student extends BaseEntity {
     private Instant date_of_birth = null;
 
     @Builder.Default
-    @Column(name = "first_name", nullable = false)
+    @Column(name = "first_name")
     private String first_name = "";
 
     @Builder.Default
-    @Column(name = "last_name", nullable = false)
+    @Column(name = "last_name")
     private String last_name = "";
 
     @Builder.Default

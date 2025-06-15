@@ -2,9 +2,6 @@ package de.hbrs.se2.views.routes.profile;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.Image;
 
@@ -16,7 +13,6 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
-import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
@@ -24,28 +20,31 @@ import de.hbrs.se2.control.user.LoginService;
 import de.hbrs.se2.control.user.UserService;
 import de.hbrs.se2.control.company.CompanyService;
 
-import de.hbrs.se2.control.student.StudentService;
 import de.hbrs.se2.model.company.Company;
 
 import de.hbrs.se2.model.user.User;
 import de.hbrs.se2.util.Constant;
 
 import elemental.json.Json;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 @AnonymousAllowed
 @Lazy
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Route(value = Constant.Value.Route.EDITCOMPANYPROFILE/*,registerAtStartup = false*/)
 public class CompanyProfile extends VerticalLayout {
 
     private final CompanyService companyService;
     private final LoginService loginService;
+    private final UserService userService;
    // private final RatingService ratingService;
     private final TextField companyNameField = new TextField("Company Name");
     private final TextField industryField = new TextField("Industry");
@@ -66,25 +65,29 @@ public class CompanyProfile extends VerticalLayout {
     private InputStream inputStream;
     Image placeholderImage;
 
-    private byte[] ByteOfInput;
+    private byte[] byteOfInput;
 
-    public CompanyProfile(CompanyService companyService, LoginService loginService, UserService userService) {
-        this.loginService = loginService;
-        this.companyService = companyService;
+    @PostConstruct
+    public void init() {
         this.currentUser = loginService.getCurrentUser();
+
         setSpacing(true);
 
         setCompanyValues();
+        this.company = companyService.findCompanyByUser(Objects.requireNonNull(loginService.getCurrentUser()));
 
-        Company company = companyService.findCompanyByUser(loginService.getCurrentUser());
 
-    //    placeholderImage = companyService.getImage(company.getLogo());
+        if(this.company != null && this.company.getLogo() != null) {
+            byte[] image = companyService.getLogoByCompany(this.company);
+            StreamResource resource = new StreamResource(this.company.getName() +".jpg", () -> new ByteArrayInputStream(image));
+            placeholderImage = new Image(resource, this.company.getName());
+        }
+        placeholderImage = new Image("https://cdn.pixabay.com/photo/2017/11/10/05/24/add-2935429_1280.png", "logo");
         placeholderImage.setWidth("200px");
         placeholderImage.setHeight("200px");
         placeholderImage.getStyle().set("border-radius", "50%");
 
         add(placeholderImage);
-
 
         setCompanyValues();
     //    showRatingStars();
@@ -102,7 +105,7 @@ public class CompanyProfile extends VerticalLayout {
         upload.addSucceededListener(event -> {
             inputStream = buffer.getInputStream();  // Mit dem ContinueButton wird das Logo der Company gesetzt
             try {
-                ByteOfInput = inputStream.readAllBytes();
+                byteOfInput = inputStream.readAllBytes();
             } catch (IOException e) {   // wenn inputstream voreilig geschlossen wurde, bspw. beim einlesen vom inputStream während Netwerkproblemen
                 UI.getCurrent().getPage().reload();
             }
@@ -146,10 +149,10 @@ public class CompanyProfile extends VerticalLayout {
                 this.company.setIndustry(industryField.getValue());
                 this.company.setDescription(descriptionField.getValue());
                 this.companyService.addCompany(this.company);
-//                if (inputStream != null) {
-//                    this.companyService.setLogo(currentUser.getEmail(), new ByteArrayInputStream(ByteOfInput));
-//                    upload.getElement().setPropertyJson("files", Json.createArray());   // nach dem save, wird das bereits geuploadete Bild aus der Uploadliste entfernt
-//                }
+                if (inputStream != null) {
+                    this.companyService.setLogoByCompany(company, byteOfInput);
+                    upload.getElement().setPropertyJson("files", Json.createArray());   // nach dem save, wird das bereits geuploadete Bild aus der Uploadliste entfernt
+                }
                 onSaveButtonClick();
             }
         });
@@ -243,7 +246,7 @@ public class CompanyProfile extends VerticalLayout {
 //    }
 
     private void showPic() {
-        StreamResource res = new StreamResource("newPic", () -> new ByteArrayInputStream(ByteOfInput));
+        StreamResource res = new StreamResource("newPic", () -> new ByteArrayInputStream(byteOfInput));
         placeholderImage.setSrc(res);
     }
 
