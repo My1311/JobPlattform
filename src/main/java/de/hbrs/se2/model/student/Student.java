@@ -79,7 +79,7 @@ public class Student extends BaseEntity {
      * @param o
      * @return
      *
-     * becaue every singele tabel, also among the tabeles, due to having the UUID in the BaseEntity-Class, it is enough to compare the uuid
+     * becaue every single tabel, also among the tabeles, due to having the UUID in the BaseEntity-Class, it is enough to compare the uuid
      */
     @Override
     public boolean equals(Object o) {

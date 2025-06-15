@@ -6,6 +6,7 @@ public final class Constant {
     public static final class Value {
 
         public static final String CURRENT_USER = "current_user";
+        public static final String CURRENT_AD = "current_advertisement";
 
         public static final class Route{
             public static final String EDITPROFILE = "edit_profile";

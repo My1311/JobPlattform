@@ -1,4 +1,4 @@
-package de.hbrs.se2.model.jobAdvertisement;
+package de.hbrs.se2.model.advertisement;
 
 import de.hbrs.se2.model.common.BaseEntity;
 import de.hbrs.se2.model.company.Company;

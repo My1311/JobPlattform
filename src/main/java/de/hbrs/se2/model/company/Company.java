@@ -1,8 +1,7 @@
 package de.hbrs.se2.model.company;
 
 import de.hbrs.se2.model.common.BaseEntity;
-import de.hbrs.se2.model.jobAdvertisement.Advertisement;
-import de.hbrs.se2.model.jobAdvertisement.Advertisement;
+import de.hbrs.se2.model.advertisement.Advertisement;
 import de.hbrs.se2.model.user.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,7 +20,7 @@ public class Company extends BaseEntity {
 
     @Builder.Default
     @Column(nullable = false)
-    private String name = ""; // die dürfen dür die db nicht leer sein
+    private String name = "";
     @Builder.Default
     @Basic(fetch = FetchType.EAGER) //will immediately be loaded
     @Column(name = "logo", nullable = true)
@@ -36,7 +35,7 @@ public class Company extends BaseEntity {
     @Column(name = "phoneNumber", nullable = true)
     private String phoneNumber = "";
     //@PrimaryKeyJoinColumn(name = "user")
-    //so that Hibernate knows it is a single value that will be recieved. otherwise there would be an error for the attrinute
+    //so that Hibernate knows it is a single value that will be received. otherwise there would be an error for the attribute
     @Builder.Default
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, optional = false)
 // if Company or User gets deleted, that company too and it is not nullable

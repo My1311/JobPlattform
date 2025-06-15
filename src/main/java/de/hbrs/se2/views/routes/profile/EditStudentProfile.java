@@ -1,6 +1,7 @@
 package de.hbrs.se2.views.routes.profile;
 
 import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -41,12 +42,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @PageTitle("Profile")
 @Route(value = Constant.Value.Route.EDITPROFILE, layout = MainLayout.class)
-@AllArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 @AnonymousAllowed
 public class EditStudentProfile extends FormLayout {
 
@@ -67,16 +69,15 @@ public class EditStudentProfile extends FormLayout {
     private final Button saveButton = new Button("Save");
     private final Button cancelButton = new Button("Cancel");
     private final Checkbox switchEditMode = new Checkbox("Edit Profile");
-    private final User currentUser = SessionAttributes.getCurrentUser();;
+    private final User currentUser = SessionAttributes.getCurrentUser();
 
-    @Autowired
+
     private final UserService userService;
-    @Autowired
     private final StudentService studentService;
-    @Autowired
     private final LocationService locationService;
-    @Autowired
     private final SkillService skillService;
+    private Student currentStudent;
+
 
     @PostConstruct
     private void initPage() {
@@ -88,6 +89,13 @@ public class EditStudentProfile extends FormLayout {
 //            add(new Div(new H3("Please login before creating your Profile!")));
 //            return;
 //        }
+        if (this.currentUser != null) {
+            this.currentStudent = studentService.findStudentByUser(this.currentUser);
+        } else { // When there is not a logged-in user, then he/she has to go login.
+            UI.getCurrent().getPage().setLocation(Constant.Value.Route.LOGIN);
+            Notification.show("Please Login!", 5, Notification.Position.TOP_CENTER);
+            return;
+        }
         VerticalLayout layoutColumn2 = new VerticalLayout();
         H3 h3 = new H3();
         FormLayout formLayout2Col = new FormLayout();
@@ -99,7 +107,7 @@ public class EditStudentProfile extends FormLayout {
         layoutColumn2.setWidth("100%");
         layoutColumn2.setMaxWidth("800px");
         layoutColumn2.setHeight("min-content");
-        h3.setText("Student Profile");
+        h3.setText("Student Profile from " + this.currentStudent.getFirst_name() + " " + this.currentStudent.getLast_name());
         h3.setWidth("100%");
         formLayout2Col.setWidth("100%");
         phone.setWidth("min-content");
@@ -125,6 +133,11 @@ public class EditStudentProfile extends FormLayout {
         formLayout2Col.add(first_name, last_name, date_of_birth, phone, status, list_of_skills, major_study, degree);
         layoutColumn2.add(description, hr, details, layoutRow);
         layoutRow.add(saveButton, cancelButton);
+
+        first_name.setRequiredIndicatorVisible(true);
+        last_name.setRequiredIndicatorVisible(true);
+        major_study.setRequiredIndicatorVisible(true);
+
         /**
          * reset the input fields to their values from db
          */
@@ -132,6 +145,22 @@ public class EditStudentProfile extends FormLayout {
         switchEditMode.addClickListener((event) -> switchEditMode());
         cancelButton.addClickListener((event) -> bindInputFieldsWithStudentData());
         bindInputFieldsWithStudentData();
+    }
+
+    private boolean requiredFieldsAreFilled() {
+        if (this.first_name.getValue().isEmpty()) {
+            Notification.show("First name is required!");
+            return false;
+        }
+        if (this.last_name.getValue().isEmpty()) {
+            Notification.show("Last name is required!");
+            return false;
+        }
+        if (this.major_study.getValue().isEmpty()) {
+            Notification.show("Major Study is required!");
+            return false;
+        }
+        return true;
     }
 
     private void switchEditMode() {
@@ -210,14 +239,15 @@ public class EditStudentProfile extends FormLayout {
         details.setContent(layoutColumn2);
     }
 
-    private void saveListener(ClickEvent<Button> event) {
-        Location location = Location.builder().city(this.city.getValue())
-                .country(this.country.getValue().toString())
+    private Location writeLocation() {
+        return Location.builder().city(this.city.getValue())
+                .country(this.country.getValue())
                 .house_number(String.valueOf(this.house_number.getValue()))
                 .street(this.street.getValue())
                 .zip_code(this.zip_code.getValue()).build();
-
-        Student student = Student.builder()
+    }
+    private Student writeStudent(Location location) {
+        return Student.builder()
                 .date_of_birth(Instant.now())
                 .degree(this.degree.getValue())
                 .description(this.description.getValue())
@@ -228,12 +258,50 @@ public class EditStudentProfile extends FormLayout {
                 .major_study(this.major_study.getValue())
                 .status(this.status.getValue())
                 .user(this.currentUser).build();
+    }
 
-        this.userService.addUser(this.currentUser);
-        this.locationService.addLocation(location);
-        this.studentService.addStudent(student);
+    private void saveListener(ClickEvent<Button> event) {
+        if (requiredFieldsAreFilled()) {
+            if (this.currentStudent != null) { // Wenn der benutzer ein student schon erstellt hat
+                this.currentStudent.setDegree(this.degree.getValue());
+                this.currentStudent.setFirst_name(this.first_name.getValue());
+                this.currentStudent.setLast_name(this.last_name.getValue());
+                this.currentStudent.setMajor_study(this.major_study.getValue());
+                //this.currentStudent.setList_of_skills(this.list_of_skills.getValue()); //todo erstelle mit SkillService ein SKill Liste fuer den Studenten
+                this.currentStudent.setStatus(this.status.getValue());
+                this.currentStudent.setDescription(this.description.getValue());
 
-        Notification.show("Student added");
+                ZoneId zoneId = ZoneId.systemDefault();
+                ZonedDateTime now = this.date_of_birth.getValue().atStartOfDay().atZone(zoneId);
+
+                this.currentStudent.setDate_of_birth(now.toInstant());
+                this.currentStudent.setPhone(this.phone.getValue());
+                Location location = this.currentStudent.getLocation();
+                location.setCity(this.city.getValue());
+                location.setCountry(this.country.getValue());
+                location.setHouse_number(this.house_number.getValue());
+                location.setZip_code(this.zip_code.getValue());
+                this.currentStudent.setLocation(location);
+
+                this.studentService.addStudent(this.currentStudent);
+                this.locationService.addLocation(location);
+                Notification.show("Student updated");
+            } else {
+//                Student student = Student.builder()
+//                        .degree(this.degree.getValue())
+//                        .first_name(this.first_name.getValue())
+//                        .last_name(this.last_name.getValue())
+//                        .major_study(this.major_study.getValue())
+//                      //  .list_of_skills(this.list_of_skills.getValue())
+//                        .user(this.currentUser).build();
+                Location location = this.writeLocation();
+                Student student = this.writeStudent(location);
+                this.userService.addUser(this.currentUser);
+                this.studentService.addStudent(student);
+                this.locationService.addLocation(location);
+                Notification.show("Student added");
+            }
+        }
 
     }
 

@@ -13,10 +13,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
@@ -25,12 +22,11 @@ import de.hbrs.se2.model.user.User;
 import de.hbrs.se2.util.SessionAttributes;
 import de.hbrs.se2.views.routes.about.AboutView;
 import de.hbrs.se2.views.routes.home.HomeView;
-import de.hbrs.se2.views.routes.jobfeed.JobFeedView;
+import de.hbrs.se2.views.routes.jobAdvertisement.AdvertisementForm;
 import de.hbrs.se2.views.routes.login.LoginView;
 import de.hbrs.se2.views.routes.login.RegisterView;
 import de.hbrs.se2.views.routes.profile.CompanyProfile;
 import de.hbrs.se2.views.routes.profile.EditStudentProfile;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 /**
@@ -112,7 +108,7 @@ public class MainLayout extends AppLayout {
         }
             nav.addItem(new SideNavItem("Home", HomeView.class, LineAwesomeIcon.GLOBE_SOLID.create()));
             nav.addItem(new SideNavItem("About", AboutView.class, LineAwesomeIcon.FILE.create()));
-            nav.addItem(new SideNavItem("JobFeed", JobFeedView.class, LineAwesomeIcon.LIST_SOLID.create()));
+            nav.addItem(new SideNavItem("JobFeed", AdvertisementForm.class, LineAwesomeIcon.LIST_SOLID.create()));
         return nav;
     }
 

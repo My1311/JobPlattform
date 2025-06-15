@@ -60,8 +60,6 @@ public class CompanyProfile extends VerticalLayout {
     private final Upload upload = new Upload(buffer);
   //  private final Grid<Rating> ratingGrid = new Grid<>();
     private final Button showEvaluationButton = new Button("Show Evaluation!");
-    private final StudentService studentService;
-
 
     private User currentUser;
     private Company company = null;
@@ -70,12 +68,9 @@ public class CompanyProfile extends VerticalLayout {
 
     private byte[] ByteOfInput;
 
-    public CompanyProfile(CompanyService companyService, StudentService studentService,
-                          LoginService loginService, UserService userService) {
-
+    public CompanyProfile(CompanyService companyService, LoginService loginService, UserService userService) {
         this.loginService = loginService;
         this.companyService = companyService;
-        this.studentService = studentService;
         this.currentUser = loginService.getCurrentUser();
         setSpacing(true);
 
